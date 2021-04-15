@@ -1,5 +1,5 @@
 # interactive-google-maps
-This code helps you interact with the Google Maps API, allowing to extract information live, and automatically fill a form with the appropriate data.
+This code helps you interact with the Google Maps API, allowing to extract information live from user's interaction on the map, and automatically fill the form with the appropriate data.
 
 Using a combination of Javascript, PHP, and HTML, this code adds several functions to capture specific informations, mainly with an on-click action from the user.
 Once the map is clicked by the user, it first creates a marker and position it on the map, and capture the longitude and lattitude of that specific point, and fill the form with that information.
