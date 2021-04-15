@@ -1,0 +1,177 @@
+<p>Begin by recording the location of your observation by clicking the map below.</p>
+<p>The map below is restricted to the coordinates of Lethbridge.
+    </p>
+
+<div id="map" style="height: 500px;"> </div>
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqwC0DPbOfzXBCUPh5faphVuyomLzcWtk&callback=initMap"></script>
+
+<script type="text/javascript">
+var map;
+var markers = [];
+var geocoder = new google.maps.Geocoder();
+
+function geocodePosition(pos) {
+  geocoder.geocode({
+    latLng: pos
+  }, function(responses) {
+    if (responses && responses.length > 0) {
+      updateMarkerAddress(responses[0].formatted_address);
+    } else {
+      updateMarkerAddress('Cannot determine address at this location.');
+    }
+  });
+}
+
+function updateMarkerStatus(str) {
+  document.getElementById('markerStatus').innerHTML = str;
+}
+
+function updateMarkerPosition(latLng) {
+  document.getElementById('pdb-longitude-2').value = latLng.lng();
+  
+  document.getElementById('pdb-latitude-2').value = latLng.lat();
+}
+
+function updateMarkerAddress(str) {
+  document.getElementById('address').innerHTML = str;
+}
+ /*
+  function setMapOnAll(map) {  
+  for (var i = 0; i < markers.length; i++) {  
+    markers[i].setMap(map);
+  }  
+}
+*/
+ 
+  function showMarkers() {  
+  setMapOnAll(map); 
+    addMarker(latLng);  
+}  
+  
+  function clearMarkers() {  
+  setMapOnAll(null);  
+}  
+
+
+function initialize() {
+
+  var minZoomLevel = 13;
+
+
+  var latLng = new google.maps.LatLng(49.691219873776326, -112.83338917980956);
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: minZoomLevel,
+    center: latLng,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  });
+ 
+ 
+  var marker = new google.maps.Marker({
+    position: location,
+    title: 'Point A',
+    map: map,
+   draggable: false
+  });
+ 
+ 
+   var strictBounds = new google.maps.LatLngBounds(
+   new google.maps.LatLng(49.63987509237867, -112.853138917980956),
+   new google.maps.LatLng(49.731199873776326, -112.82058917980956));
+ 
+
+  // Update current position info.
+  //updateMarkerPosition(latLng);
+  //geocodePosition(latLng);
+
+  // Add dragging event listeners.
+  
+  google.maps.event.addListener(marker, 'dragstart', function() {
+    updateMarkerAddress('Dragging...');
+  });
+
+  google.maps.event.addListener(marker, 'drag', function() {
+    updateMarkerStatus('Dragging...');
+    updateMarkerPosition(marker.getPosition());
+  });
+
+  google.maps.event.addListener(marker, 'dragend', function() {
+    updateMarkerStatus('<span style="color: green;">Location successfully Recorded ! Fill in the form below');
+	updateMarkerPosition(marker.getPosition());
+    geocodePosition(marker.getPosition());
+ });
+ 
+  
+  // This event listener will call addMarker() when the map is clicked.  
+  google.maps.event.addListener(map, 'click', function(event) {   
+    clearMarkers();
+    addMarker(event.latLng, map);
+	updateMarkerPosition(marker.getPosition());
+    geocodePosition(marker.getPosition());
+	
+  });
+
+  
+function addMarker(location, map) {  
+  var marker = new google.maps.Marker({  
+    position: location,
+     draggable: false,  
+    map: map  
+  });  
+  markers.push(marker);
+  geocodePosition(marker.getPosition());
+  updateMarkerPosition(marker.getPosition());
+  updateMarkerStatus('<span style="color: green;">Location successfully Recorded ! Fill in the form below </span>');
+}
+
+ // Listen for the dragend event
+ google.maps.event.addListener(map, 'dragend', function () {
+  if (strictBounds.contains(map.getCenter())) return;
+
+     // We're out of bounds - Move the map back within the bounds
+
+     var c = map.getCenter(),
+         x = c.lng(),
+         y = c.lat(),
+         maxX = strictBounds.getNorthEast().lng(),
+         maxY = strictBounds.getNorthEast().lat(),
+         minX = strictBounds.getSouthWest().lng(),
+         minY = strictBounds.getSouthWest().lat();
+
+     if (x < minX) x = minX;
+     if (x > maxX) x = maxX;
+     if (y < minY) y = minY;
+     if (y > maxY) y = maxY;
+
+     map.setCenter(new google.maps.LatLng(y, x));
+     
+    
+ });
+ 
+  // Limit the zoom level
+ google.maps.event.addListener(map, 'zoom_changed', function () {
+     if (map.getZoom() < minZoomLevel) map.setZoom(minZoomLevel);
+ });  
+  
+}
+// Onload handler to fire off the app.
+google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+
+<div id="infoPanel">
+    <b>Marker status:</b>
+    <div id="markerStatus">
+        <i>
+            <span style="color: red;">Please click on the map to record your location
+            </span>
+        </i>
+    </div>
+  
+  </div>
+<br>
+
+
+
+<div style="background-color:#d1d1d1">
+[pdb_signup template=custom tabs="true"]
+</div>
