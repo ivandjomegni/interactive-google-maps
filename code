@@ -4,7 +4,7 @@
 
 <div id="map" style="height: 500px;"> </div>
 
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqwC0DPbOfzXBCUPh5faphVuyomLzcWtk&callback=initMap"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=[API_Key]"></script>
 
 <script type="text/javascript">
 var map;
